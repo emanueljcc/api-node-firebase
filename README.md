@@ -1,0 +1,1 @@
+export GOOGLE_APPLICATION_CREDENTIALS="/Users/emanuelcastillo/Work/node_api_firebase_hotels/nodeapifirebasehotels-firebase-adminsdk-s7jih-b4ae1f7cf3.json"
