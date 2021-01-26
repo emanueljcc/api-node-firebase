@@ -1,4 +1,4 @@
-const { db } = require("../db");
+const { db } = require("../database");
 
 const getAuthToken = (req, res, next) => {
     if (
@@ -12,7 +12,7 @@ const getAuthToken = (req, res, next) => {
     next();
 };
 
-const checkIfAuthenticated = (req, res, next) => {
+const isAuthenticated = (req, res, next) => {
     // console.log(req.headers.authorization);
     getAuthToken(req, res, async () => {
         try {
@@ -28,6 +28,27 @@ const checkIfAuthenticated = (req, res, next) => {
     });
 };
 
+const AdminAuth = (req, res, next) => {
+    const { authId } = req;
+
+    const users = db.database().ref("roles");
+    const user = users.orderByChild("user_uid").equalTo(authId);
+    user.once("value", function (snap) {
+        const data = snap.val();
+
+        for (const key in data) {
+            role = data[key]["role"];
+
+            if (role === "admin") return next();
+
+            res.status(403).json({
+                message: "You do not have permission for this request.",
+            });
+        }
+    });
+};
+
 module.exports = {
-    checkIfAuthenticated,
+    isAuthenticated,
+    AdminAuth,
 };

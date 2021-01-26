@@ -1,4 +1,4 @@
-const { db, firebase } = require("../db");
+const { db } = require("../database");
 const { validationResult } = require("express-validator");
 
 getAll = async (req, res) => {
@@ -11,7 +11,7 @@ getAll = async (req, res) => {
 
                 res.status(200).json({
                     data,
-                    message: "All OK",
+                    message: "Successfully obtained by all users.",
                 });
             });
     } catch (error) {
@@ -27,7 +27,7 @@ find = async (req, res) => {
         const users = db.database().ref("users");
         const user = users.child(id);
         user.once("value", function (snap) {
-            res.status(200).json({ data: snap.val(), message: "One OK" });
+            res.status(200).json({ data: snap.val(), message: "Success." });
         });
     } catch (error) {
         res.status(500).json({
@@ -51,7 +51,7 @@ add = async (req, res) => {
         await db.database().ref("users").push(user);
         res.status(200).json({
             data: user,
-            message: "Create OK",
+            message: "User created successfully.",
         });
     } catch (error) {
         res.status(500).json({
@@ -78,7 +78,7 @@ edit = async (req, res) => {
 
         res.status(200).json({
             data: user,
-            message: "Update OK",
+            message: "User edited successfully.",
         });
     } catch (error) {
         res.status(500).json({
@@ -97,91 +97,16 @@ remove = async (req, res) => {
         await db.database().ref(`users/${id}`).remove();
 
         res.status(200).json({
-            message: "Remove OK",
+            message: "User deleted successfully.",
         });
     } catch (error) {
         res.status(500).json({
             message: error,
         });
     }
-};
-
-createUser = async (req, res) => {
-    try {
-        const {
-            email,
-            phoneNumber,
-            password,
-            firstName,
-            lastName,
-            photoUrl,
-        } = req.body;
-
-        const user = await db.auth().createUser({
-            email,
-            phoneNumber,
-            password,
-            displayName: `${firstName} ${lastName}`,
-            photoURL: photoUrl,
-        });
-
-        res.status(200).json({ data: user, message: "Create user OK" });
-    } catch (error) {
-        res.status(500).json({
-            message: error,
-        });
-    }
-};
-
-validateLoginData = (data) => {
-    let errors = {};
-    if (isEmpty(data.email)) {
-        errors.email = "Email filed is required!";
-    } else if (isEmpty(data.password)) {
-        errors.password = "Password filed is required!";
-    } else if (!isEmail(data.email)) {
-        errors.email = "Must be valid email address";
-    }
-    return {
-        errors,
-        valid: Object.keys(errors).length === 0 ? true : false,
-    };
-};
-
-login = (req, res) => {
-    const user = {
-        email: req.body.email,
-        password: req.body.password,
-    };
-
-    // const { valid, errors } = validateLoginData(user);
-    // if (!valid) return res.status(400).json(errors);
-    firebase
-        .auth()
-        .signInWithEmailAndPassword(user.email, user.password) //firebase signin method
-        .then((data) => {
-            console.log(JSON.stringify(data));
-            return data.user.getIdToken();
-        })
-        .then((token) => {
-            return res.json({ token });
-        })
-        .catch((err) => {
-            if (
-                err.code == "auth/wrong-password" ||
-                err.code == "auth/user-not-found"
-            ) {
-                return res
-                    .status(403)
-                    .json({ message: "Wrong credentials, Please try again" });
-            }
-            return res.status(500).json({ error: err.code });
-        });
 };
 
 module.exports = {
-    login,
-    createUser,
     getAll,
     find,
     add,
