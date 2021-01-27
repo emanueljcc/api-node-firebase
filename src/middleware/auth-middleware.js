@@ -36,6 +36,11 @@ const AdminAuth = (req, res, next) => {
     role.once("value", function (snap) {
         const data = snap.val();
 
+        if (!data)
+            res.status(403).json({
+                message: "User does not have an assigned role.",
+            });
+
         for (const key in data) {
             const el = data[key]["role"];
 

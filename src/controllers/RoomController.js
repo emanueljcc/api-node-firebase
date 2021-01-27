@@ -1,4 +1,4 @@
-const { db } = require("../database");
+const { db, auth } = require("../database");
 const { validationResult } = require("express-validator");
 
 getAll = async (req, res) => {
@@ -41,14 +41,24 @@ add = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
+
     try {
-        const { firstName, lastName, email } = req.body;
+        const { authId } = req;
+        console.log(auth);
+
+        const { name, hotelId } = req.body;
         const room = {
-            firstName,
-            lastName,
-            email,
+            name,
+            hotelId,
+            userId: authId,
         };
-        await db.database().ref("rooms").push(room);
+
+        // await db.database().ref("rooms").push(room);
+
+        let docRef = db.collection("rooms").doc(hotelId);
+
+        docRef.set(room);
+
         res.status(200).json({
             data: room,
             message: "Room created successfully.",

@@ -3,7 +3,6 @@ const { validationResult } = require("express-validator");
 
 getHotels = async (req, res) => {
     try {
-        console.log(111);
         await db
             .database()
             .ref("hotels")
@@ -47,9 +46,13 @@ createHotel = async (req, res) => {
         const hotel = {
             name,
         };
-        await db.database().ref("hotels").push(hotel);
+
+        let docRef = db.collection("hotels").doc();
+
+        let data = docRef.set(hotel);
+
         res.status(200).json({
-            data: hotel,
+            data: data,
             message: "Hotel created successfully.",
         });
     } catch (error) {
