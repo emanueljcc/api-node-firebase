@@ -6,7 +6,7 @@
 2. `cp .env.example .env`
 3. `npm run dev`
 
-**IMPORTANT:** Leave the data in the .env.example as it is a small test.
+**IMPORTANT:** Firebase credentials are missing from the .env file.
 
 # Postman Collection
 
