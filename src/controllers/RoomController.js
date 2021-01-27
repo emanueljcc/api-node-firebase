@@ -53,11 +53,7 @@ add = async (req, res) => {
             userId: authId,
         };
 
-        // await db.database().ref("rooms").push(room);
-
-        let docRef = db.collection("rooms").doc(hotelId);
-
-        docRef.set(room);
+        await db.database().ref("rooms").push(room);
 
         res.status(200).json({
             data: room,

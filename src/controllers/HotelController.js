@@ -46,13 +46,10 @@ createHotel = async (req, res) => {
         const hotel = {
             name,
         };
-
-        let docRef = db.collection("hotels").doc();
-
-        let data = docRef.set(hotel);
+        await db.database().ref("hotels").push(hotel);
 
         res.status(200).json({
-            data: data,
+            data: hotel,
             message: "Hotel created successfully.",
         });
     } catch (error) {
