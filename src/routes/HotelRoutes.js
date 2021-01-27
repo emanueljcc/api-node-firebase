@@ -8,11 +8,8 @@ const {
 
 const { isAuthenticated, AdminAuth } = require("../middleware/auth-middleware");
 
-// crud
-// [isAuthenticated, AdminAuth]
-
-router.get("/", getHotels);
-router.get("/:id", findHotel);
-router.post("/", createHotel);
+router.get("/", [isAuthenticated, AdminAuth], getHotels);
+router.get("/:id", [isAuthenticated, AdminAuth], findHotel);
+router.post("/", [isAuthenticated, AdminAuth], createHotel);
 
 module.exports = router;

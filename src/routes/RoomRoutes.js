@@ -12,10 +12,10 @@ const validator = require("../utils/validator");
 const { isAuthenticated, AdminAuth } = require("../middleware/auth-middleware");
 
 // crud
-router.get("/", getAll);
-router.get("/:id", find);
-router.post("/", add);
-router.put("/:id", validator.id, edit);
-router.delete("/:id", validator.id, remove);
+router.get("/", [isAuthenticated, AdminAuth], getAll);
+router.get("/:id", [isAuthenticated, AdminAuth], find);
+router.post("/", [isAuthenticated, AdminAuth], add);
+router.put("/:id", [isAuthenticated, AdminAuth], validator.id, edit);
+router.delete("/:id", [isAuthenticated, AdminAuth], validator.id, remove);
 
 module.exports = router;

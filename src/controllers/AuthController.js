@@ -1,8 +1,13 @@
 const { db, firebase } = require("../database");
+const { validationResult } = require("express-validator");
 
 // TODO: AGREGAR EXPRESS validator
 
 createUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
     try {
         const { email, password, firstName, lastName, role } = req.body;
 
