@@ -5,13 +5,13 @@ getAll = async (req, res) => {
     try {
         await db
             .database()
-            .ref("users")
+            .ref("rooms")
             .once("value", (snapshot) => {
                 const data = snapshot.val();
 
                 res.status(200).json({
                     data,
-                    message: "Successfully obtained by all users.",
+                    message: "Successfully obtained by all rooms.",
                 });
             });
     } catch (error) {
@@ -24,14 +24,14 @@ getAll = async (req, res) => {
 find = async (req, res) => {
     try {
         const { id } = req.params;
-        const users = db.database().ref("users");
-        const user = users.child(id);
-        user.once("value", function (snap) {
+        const rooms = db.database().ref("rooms");
+        const room = rooms.child(id);
+        room.once("value", function (snap) {
             res.status(200).json({ data: snap.val(), message: "Success." });
         });
     } catch (error) {
         res.status(500).json({
-            message: error,
+            message: error.message,
         });
     }
 };
@@ -43,19 +43,19 @@ add = async (req, res) => {
     }
     try {
         const { firstName, lastName, email } = req.body;
-        const user = {
+        const room = {
             firstName,
             lastName,
             email,
         };
-        await db.database().ref("users").push(user);
+        await db.database().ref("rooms").push(room);
         res.status(200).json({
-            data: user,
-            message: "User created successfully.",
+            data: room,
+            message: "Room created successfully.",
         });
     } catch (error) {
         res.status(500).json({
-            message: error,
+            message: error.message,
         });
     }
 };
@@ -68,17 +68,17 @@ edit = async (req, res) => {
     try {
         const { id } = req.params;
         const { firstName, lastName, email } = req.body;
-        const user = {
+        const room = {
             id,
             firstName,
             lastName,
             email,
         };
-        db.database().ref(`users/${id}`).update(user);
+        db.database().ref(`rooms/${id}`).update(room);
 
         res.status(200).json({
-            data: user,
-            message: "User edited successfully.",
+            data: room,
+            message: "Room edited successfully.",
         });
     } catch (error) {
         res.status(500).json({
@@ -94,14 +94,14 @@ remove = async (req, res) => {
     }
     try {
         const { id } = req.params;
-        await db.database().ref(`users/${id}`).remove();
+        await db.database().ref(`rooms/${id}`).remove();
 
         res.status(200).json({
-            message: "User deleted successfully.",
+            message: "Room deleted successfully.",
         });
     } catch (error) {
         res.status(500).json({
-            message: error,
+            message: error.message,
         });
     }
 };

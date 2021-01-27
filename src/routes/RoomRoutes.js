@@ -6,7 +6,7 @@ const {
     add,
     edit,
     remove,
-} = require("../controllers/UserControllers");
+} = require("../controllers/RoomController");
 const validator = require("../utils/validator");
 
 const { isAuthenticated, AdminAuth } = require("../middleware/auth-middleware");

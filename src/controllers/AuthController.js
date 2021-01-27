@@ -13,7 +13,7 @@ createUser = async (req, res) => {
         });
 
         await db.database().ref("roles").push({
-            user_uid: user.uid,
+            userId: user.uid,
             role,
         });
 
@@ -35,7 +35,6 @@ login = (req, res) => {
         .auth()
         .signInWithEmailAndPassword(user.email, user.password)
         .then((data) => {
-            console.log(JSON.stringify(data));
             return data.user.getIdToken();
         })
         .then((token) => {

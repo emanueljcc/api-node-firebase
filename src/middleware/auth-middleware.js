@@ -31,15 +31,15 @@ const isAuthenticated = (req, res, next) => {
 const AdminAuth = (req, res, next) => {
     const { authId } = req;
 
-    const users = db.database().ref("roles");
-    const user = users.orderByChild("user_uid").equalTo(authId);
-    user.once("value", function (snap) {
+    const ref = db.database().ref("roles");
+    const role = ref.orderByChild("userId").equalTo(authId);
+    role.once("value", function (snap) {
         const data = snap.val();
 
         for (const key in data) {
-            role = data[key]["role"];
+            const el = data[key]["role"];
 
-            if (role === "admin") return next();
+            if (el === "admin") return next();
 
             res.status(403).json({
                 message: "You do not have permission for this request.",
